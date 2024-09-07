@@ -1,4 +1,4 @@
-// Traduzioni per tutte le lingue
+// Traduzioni per le lingue
 const translations = {
     it: {
         welcome: "Benvenuto su Scotch",
@@ -11,7 +11,9 @@ const translations = {
         steps: "passi",
         turn_right: "gira a destra",
         turn_left: "gira a sinistra",
-        say: "dì"
+        say: "dì",
+        login: "Login",
+        register: "Registrati"
     },
     en: {
         welcome: "Welcome to Scotch",
@@ -24,103 +26,70 @@ const translations = {
         steps: "steps",
         turn_right: "turn right",
         turn_left: "turn left",
-        say: "say"
-    },
-    fr: {
-        welcome: "Bienvenue sur Scotch",
-        create_project: "Créer un nouveau projet",
-        project_created: "Projet créé avec succès!",
-        project_list: "Vos Projets",
-        settings: "Paramètres",
-        back: "Retour",
-        move_steps: "avance",
-        steps: "pas",
-        turn_right: "tourne à droite",
-        turn_left: "tourne à gauche",
-        say: "dis"
-    },
-    de: {
-        welcome: "Willkommen bei Scotch",
-        create_project: "Erstelle ein neues Projekt",
-        project_created: "Projekt erfolgreich erstellt!",
-        project_list: "Deine Projekte",
-        settings: "Einstellungen",
-        back: "Zurück",
-        move_steps: "bewege",
-        steps: "Schritte",
-        turn_right: "drehe rechts",
-        turn_left: "drehe links",
-        say: "sage"
-    },
-    es: {
-        welcome: "Bienvenido a Scotch",
-        create_project: "Crear un nuevo proyecto",
-        project_created: "Proyecto creado con éxito!",
-        project_list: "Tus Proyectos",
-        settings: "Ajustes",
-        back: "Atrás",
-        move_steps: "mover",
-        steps: "pasos",
-        turn_right: "gira a la derecha",
-        turn_left: "gira a la izquierda",
-        say: "decir"
+        say: "say",
+        login: "Login",
+        register: "Register"
     }
 };
 
 // Funzione per cambiare la lingua
 function changeLanguage() {
-    const selectedLang = document.getElementById('language').value;
+    const selectedLang = document.getElementById('language')?.value || 'en';
     const langData = translations[selectedLang];
-    
-    // Cambia i testi in tutte le pagine
+
+    // Modifica i testi in tutte le pagine in base alla lingua
     document.querySelector('h1')?.innerText = langData.welcome;
     document.getElementById('createProjectBtn')?.innerText = langData.create_project;
     document.getElementById('projectListTitle')?.innerText = langData.project_list;
     document.getElementById('settingsTitle')?.innerText = langData.settings;
     document.getElementById('backBtn')?.innerText = langData.back;
-
-    // Aggiorna i blocchi con la lingua selezionata
-    Blockly.Blocks['move_steps'].init = function() {
-        this.appendDummyInput()
-            .appendField(langData.move_steps)
-            .appendField(new Blockly.FieldNumber(10), "STEPS")
-            .appendField(langData.steps);
-        this.setPreviousStatement(true, null);
-        this.setNextStatement(true, null);
-        this.setColour(230);
-        this.setTooltip(langData.move_steps + " " + langData.steps);
-        this.setHelpUrl("");
-    };
-
-    Blockly.mainWorkspace.updateToolbox(document.getElementById('blocklyDiv'));
+    document.getElementById('loginBtn')?.innerText = langData.login;
+    document.getElementById('registerBtn')?.innerText = langData.register;
 
     // Salva la lingua selezionata nel localStorage
     localStorage.setItem('language', selectedLang);
 }
 
-// Funzione per caricare la lingua dal localStorage
+// Carica la lingua salvata dal localStorage
 window.onload = function() {
-    const selectedLang = localStorage.getItem('language') || 'it';
-    document.getElementById('language').value = selectedLang;
+    const selectedLang = localStorage.getItem('language') || 'en';  // Imposta 'en' come predefinito se non c'è lingua salvata
+    document.getElementById('language')?.value = selectedLang;
     changeLanguage();
 };
 
-// Funzione per creare un progetto e reindirizzare alla pagina dei progetti
-document.getElementById('newProjectForm')?.addEventListener('submit', function (e) {
+// Funzione per registrarsi
+document.getElementById('registerForm')?.addEventListener('submit', function (e) {
     e.preventDefault();
 
-    const projectName = document.getElementById('projectName').value;
-    const projectDescription = document.getElementById('projectDescription').value;
+    const email = document.getElementById('email').value;
+    const username = document.getElementById('username').value;
+    const password = document.getElementById('password').value;
 
-    let projects = JSON.parse(localStorage.getItem('projects')) || [];
-    const projectId = projects.length + 1;
-    projects.push({ id: projectId, name: projectName, description: projectDescription });
-    localStorage.setItem('projects', JSON.stringify(projects));
+    if (email && username && password) {
+        // Salva l'utente nel localStorage
+        localStorage.setItem('user', JSON.stringify({ email, username, password }));
+        alert('Registrazione avvenuta con successo!');
+        closeModal('registerModal');
+    } else {
+        alert('Compila tutti i campi.');
+    }
+});
 
-    alert(translations[document.getElementById('language').value].project_created);
+// Funzione per login
+document.getElementById('loginForm')?.addEventListener('submit', function (e) {
+    e.preventDefault();
 
-    // Reindirizza alla pagina dei progetti
-    window.location.href = `projects.html`;
+    const username = document.getElementById('loginUsername').value;
+    const password = document.getElementById('loginPassword').value;
+
+    const storedUser = JSON.parse(localStorage.getItem('user'));
+
+    if (storedUser && storedUser.username === username && storedUser.password === password) {
+        alert('Login effettuato con successo!');
+        window.location.href = 'profile.html';  // Reindirizza alla pagina del profilo
+    } else {
+        alert('Nome utente o password errati!');
+    }
 });
 
 // Funzione per mostrare/nascondere la password
@@ -134,5 +103,24 @@ function togglePassword() {
         passwordField.type = "password";
         eyeIcon.innerText = "👁️";
     }
-}creato
-    
+}
+
+// Funzione per creare un progetto e reindirizzare alla pagina dei progetti
+document.getElementById('newProjectForm')?.addEventListener('submit', function (e) {
+    e.preventDefault();
+
+    const projectName = document.getElementById('projectName').value;
+    const projectDescription = document.getElementById('projectDescription').value;
+
+    if (projectName && projectDescription) {
+        let projects = JSON.parse(localStorage.getItem('projects')) || [];
+        const projectId = projects.length + 1;
+        projects.push({ id: projectId, name: projectName, description: projectDescription });
+        localStorage.setItem('projects', JSON.stringify(projects));
+
+        alert(translations[document.getElementById('language').value].project_created);
+        window.location.href = `projects.html`;  // Reindirizza alla lista progetti
+    } else {
+        alert('Compila tutti i campi per creare il progetto.');
+    }
+});
