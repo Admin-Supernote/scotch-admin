@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Scotch - Editor</title>
+    <link rel="stylesheet" href="style.css">
+    <script src="https://unpkg.com/blockly/blockly.min.js"></script>
+</head>
+<body>
+    <div class="container">
+        <h1>Editor di Programmazione a Blocchi</h1>
+        <div id="blocklyDiv" style="height: 480px; width: 1000px;"></div>
+        <img src="scotch.png" alt="Mascotte Scotch" id="scotchSprite" style="position: absolute; top: 250px; left: 500px;">
+        <button onclick="runCode()">Esegui Codice</button>
+        <pre id="codeArea"></pre>
+    </div>
+
+    <script>
+        // Configurazione di Blockly
+        var workspace = Blockly.inject('blocklyDiv', {
+            toolbox: `
+            <xml>
+                <category name="Movimento">
+                    <block type="move_steps"></block>
+                    <block type="turn_right"></block>
+                    <block type="turn_left"></block>
+                </category>
+                <category name="Controllo">
+                    <block type="controls_if"></block>
+                    <block type="controls_repeat_ext"></block>
+                </category>
+                <category name="Aspetto">
+                    <block type="say_message"></block>
+                </category>
+            </xml>
+            `
+        });
+
+        // Funzione per generare il codice dai blocchi e mostrarlo
+        function runCode() {
+            var code = Blockly.JavaScript.workspaceToCode(workspace);
+            document.getElementById('codeArea').textContent = code;
+            try {
+                eval(code); // Esegue il codice generato
+            } catch (e) {
+                alert("Errore nel codice: " + e);
+            }
+        }
+
+        // Funzione per muovere lo sprite Scotch
+        Blockly.Blocks['move_steps'] = {
+            init: function() {
+                this.appendDummyInput()
+                    .appendField("muovi")
+                    .appendField(new Blockly.FieldNumber(10), "STEPS")
+                    .appendField("passi");
+                this.setPreviousStatement(true, null);
+                this.setNextStatement(true, null);
+                this.setColour(230);
+                this.setTooltip("Muovi di un certo numero di passi.");
+                this.setHelpUrl("");
+            }
+        };
+
+        Blockly.JavaScript['move_steps'] = function(block) {
+            var steps = block.getFieldValue('STEPS');
+            var code = 'document.getElementById("scotchSprite").style.left = (parseInt(document.getElementById("scotchSprite").style.left) + ' + steps + ') + "px";\n';
+            return code;
+        };
+    </script>
+</body>
+</html>
