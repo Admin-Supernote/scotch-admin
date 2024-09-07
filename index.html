@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Scotch - Register/Login</title>
+    <link rel="stylesheet" href="style.css">
+    <script src="main.js" defer></script>
+</head>
+<body>
+    <div class="container">
+        <div class="login-register">
+            <h1>Benvenuto su Scotch</h1>
+            <div class="buttons">
+                <button class="btn-primary" onclick="openRegister()">Registrati</button>
+                <button class="btn-secondary" onclick="openLogin()">Login</button>
+            </div>
+        </div>
+
+        <!-- Modal Register -->
+        <div id="registerModal" class="modal">
+            <div class="modal-content">
+                <span class="close" onclick="closeModal('registerModal')">&times;</span>
+                <h2>Registrati</h2>
+                <form id="registerForm">
+                    <input type="email" id="email" placeholder="Email" required>
+                    <input type="text" id="username" placeholder="Nome Utente" required>
+                    <input type="password" id="password" placeholder="Password" required>
+                    <button class="btn-primary" type="submit">Registrati</button>
+                </form>
+            </div>
+        </div>
+
+        <!-- Modal Login -->
+        <div id="loginModal" class="modal">
+            <div class="modal-content">
+                <span class="close" onclick="closeModal('loginModal')">&times;</span>
+                <h2>Login</h2>
+                <form id="loginForm">
+                    <input type="text" id="loginUsername" placeholder="Nome Utente" required>
+                    <input type="password" id="loginPassword" placeholder="Password" required>
+                    <button class="btn-primary" type="submit">Login</button>
+                </form>
+            </div>
+        </div>
+    </div>
+</body>
+</html>
