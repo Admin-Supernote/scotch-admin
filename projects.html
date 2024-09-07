@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Scotch - I tuoi Progetti</title>
+    <link rel="stylesheet" href="style.css">
+    <script src="main.js" defer></script>
+</head>
+<body>
+    <div class="container">
+        <h1 id="projectListTitle"></h1>
+        <div class="project-list">
+            <ul id="projectList">
+                <!-- Progetti dinamici -->
+            </ul>
+        </div>
+        <button class="btn-primary" id="backBtn" onclick="window.history.back()">Indietro</button>
+    </div>
+
+    <script>
+        // Carica i progetti dal localStorage
+        const projects = JSON.parse(localStorage.getItem('projects')) || [];
+        const projectListElement = document.getElementById('projectList');
+
+        if (projects.length === 0) {
+            projectListElement.innerHTML = '<li>Nessun progetto trovato.</li>';
+        } else {
+            projects.forEach(project => {
+                const listItem = document.createElement('li');
+                listItem.innerHTML = `<a href="project.html?id=${project.id}">${project.name}</a>`;
+                projectListElement.appendChild(listItem);
+            });
+        }
+    </script>
+</body>
+</html>
