@@ -3,15 +3,19 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Scotch - Progetto Creato</title>
+    <title>Scotch - Modifica Progetto</title>
     <link rel="stylesheet" href="style.css">
+    <script src="https://unpkg.com/blockly/blockly.min.js"></script>
     <script src="main.js" defer></script>
 </head>
 <body>
     <div class="container">
         <h1 id="projectTitle"></h1>
-        <p id="projectDescription"></p>
-        <a href="editor.html" class="btn-primary">Modifica Progetto</a>
+        <div id="blocklyDiv" style="height: 480px; width: 1000px;"></div>
+        <img src="scotch.png" alt="Mascotte Scotch" id="scotchSprite" style="position: absolute; top: 250px; left: 500px;">
+        <button onclick="runCode()">Esegui Codice</button>
+        <button class="btn-primary" id="backBtn" onclick="window.history.back()">Indietro</button>
+        <pre id="codeArea"></pre>
     </div>
 
     <script>
@@ -23,9 +27,119 @@
         const projects = JSON.parse(localStorage.getItem('projects'));
         const project = projects.find(p => p.id == projectId);
 
-        // Mostra i dettagli del progetto
+        // Mostra il titolo del progetto
         document.getElementById('projectTitle').innerText = project.name;
-        document.getElementById('projectDescription').innerText = project.description;
+
+        // Configurazione di Blockly per questo progetto
+        var workspace = Blockly.inject('blocklyDiv', {
+            toolbox: `
+            <xml>
+                <category name="Movimento">
+                    <block type="move_steps"></block>
+                    <block type="turn_right"></block>
+                    <block type="turn_left"></block>
+                </category>
+                <category name="Controllo">
+                    <block type="controls_if"></block>
+                    <block type="controls_repeat_ext"></block>
+                </category>
+                <category name="Aspetto">
+                    <block type="say_message"></block>
+                </category>
+            </xml>
+            `
+        });
+
+        // Funzione per generare ed eseguire il codice
+        function runCode() {
+            var code = Blockly.JavaScript.workspaceToCode(workspace);
+            document.getElementById('codeArea').textContent = code;
+            try {
+                eval(code); // Esegue il codice generato
+            } catch (e) {
+                alert("Errore nel codice: " + e);
+            }
+        }
+
+        // Blocchi personalizzati per muovere lo sprite Scotch
+        Blockly.Blocks['move_steps'] = {
+            init: function() {
+                this.appendDummyInput()
+                    .appendField("muovi")
+                    .appendField(new Blockly.FieldNumber(10), "STEPS")
+                    .appendField("passi");
+                this.setPreviousStatement(true, null);
+                this.setNextStatement(true, null);
+                this.setColour(230);
+                this.setTooltip("Muovi di un certo numero di passi.");
+                this.setHelpUrl("");
+            }
+        };
+
+        Blockly.JavaScript['move_steps'] = function(block) {
+            var steps = block.getFieldValue('STEPS');
+            var code = 'document.getElementById("scotchSprite").style.left = (parseInt(document.getElementById("scotchSprite").style.left) + ' + steps + ') + "px";\n';
+            return code;
+        };
+
+        Blockly.Blocks['turn_right'] = {
+            init: function() {
+                this.appendDummyInput()
+                    .appendField("gira a destra di")
+                    .appendField(new Blockly.FieldAngle(90), "DEGREES")
+                    .appendField("gradi");
+                this.setPreviousStatement(true, null);
+                this.setNextStatement(true, null);
+                this.setColour(230);
+                this.setTooltip("Gira a destra di un certo numero di gradi.");
+                this.setHelpUrl("");
+            }
+        };
+
+        Blockly.JavaScript['turn_right'] = function(block) {
+            var degrees = block.getFieldValue('DEGREES');
+            var code = 'document.getElementById("scotchSprite").style.transform += "rotate(' + degrees + 'deg)";\n';
+            return code;
+        };
+
+        Blockly.Blocks['turn_left'] = {
+            init: function() {
+                this.appendDummyInput()
+                    .appendField("gira a sinistra di")
+                    .appendField(new Blockly.FieldAngle(90), "DEGREES")
+                    .appendField("gradi");
+                this.setPreviousStatement(true, null);
+                this.setNextStatement(true, null);
+                this.setColour(230);
+                this.setTooltip("Gira a sinistra di un certo numero di gradi.");
+                this.setHelpUrl("");
+            }
+        };
+
+        Blockly.JavaScript['turn_left'] = function(block) {
+            var degrees = block.getFieldValue('DEGREES');
+            var code = 'document.getElementById("scotchSprite").style.transform += "rotate(-' + degrees + 'deg)";\n';
+            return code;
+        };
+
+        Blockly.Blocks['say_message'] = {
+            init: function() {
+                this.appendDummyInput()
+                    .appendField("dì")
+                    .appendField(new Blockly.FieldTextInput("Ciao!"), "MESSAGE");
+                this.setPreviousStatement(true, null);
+                this.setNextStatement(true, null);
+                this.setColour(160);
+                this.setTooltip("Mostra un messaggio sullo schermo.");
+                this.setHelpUrl("");
+            }
+        };
+
+        Blockly.JavaScript['say_message'] = function(block) {
+            var message = block.getFieldValue('MESSAGE');
+            var code = 'alert("' + message + '");\n';
+            return code;
+        };
     </script>
 </body>
 </html>
