@@ -9,11 +9,12 @@
 </head>
 <body>
     <div class="container">
+        <h1>SCOTCH</h1> <!-- Aggiunto il logo -->
         <div class="login-register">
             <h1>Benvenuto su Scotch</h1>
             <div class="buttons">
-                <button class="btn-primary" onclick="openRegister()">Registrati</button>
-                <button class="btn-secondary" onclick="openLogin()">Login</button>
+                <button class="btn-primary" id="registerBtn" onclick="openRegister()">Registrati</button>
+                <button class="btn-secondary" id="loginBtn" onclick="openLogin()">Login</button>
             </div>
         </div>
 
@@ -26,6 +27,7 @@
                     <input type="email" id="email" placeholder="Email" required>
                     <input type="text" id="username" placeholder="Nome Utente" required>
                     <input type="password" id="password" placeholder="Password" required>
+                    <span id="eyeIcon" onclick="togglePassword()">👁️</span> <!-- Aggiunto l'occhio per mostrare la password -->
                     <button class="btn-primary" type="submit">Registrati</button>
                 </form>
             </div>
@@ -36,13 +38,4 @@
             <div class="modal-content">
                 <span class="close" onclick="closeModal('loginModal')">&times;</span>
                 <h2>Login</h2>
-                <form id="loginForm">
-                    <input type="text" id="loginUsername" placeholder="Nome Utente" required>
-                    <input type="password" id="loginPassword" placeholder="Password" required>
-                    <button class="btn-primary" type="submit">Login</button>
-                </form>
-            </div>
-        </div>
-    </div>
-</body>
-</html>
+                <form id
