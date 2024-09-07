@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Scotch - Progetto Creato</title>
+    <link rel="stylesheet" href="style.css">
+    <script src="main.js" defer></script>
+</head>
+<body>
+    <div class="container">
+        <h1 id="projectTitle"></h1>
+        <p id="projectDescription"></p>
+        <a href="editor.html" class="btn-primary">Modifica Progetto</a>
+    </div>
+
+    <script>
+        // Recupera i parametri dalla URL
+        const urlParams = new URLSearchParams(window.location.search);
+        const projectId = urlParams.get('id');
+
+        // Recupera il progetto dal localStorage
+        const projects = JSON.parse(localStorage.getItem('projects'));
+        const project = projects.find(p => p.id == projectId);
+
+        // Mostra i dettagli del progetto
+        document.getElementById('projectTitle').innerText = project.name;
+        document.getElementById('projectDescription').innerText = project.description;
+    </script>
+</body>
+</html>
