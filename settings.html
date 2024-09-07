@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Scotch - Impostazioni</title>
+    <link rel="stylesheet" href="style.css">
+    <script src="main.js" defer></script>
+</head>
+<body>
+    <div class="container">
+        <h1>Impostazioni</h1>
+        <form id="settingsForm">
+            <input type="text" id="newUsername" placeholder="Nuovo nome utente">
+            <input type="password" id="newPassword" placeholder="Nuova password">
+            <label for="language">Scegli la lingua:</label>
+            <select id="language" onchange="changeLanguage()">
+                <option value="it">Italiano</option>
+                <option value="en">Inglese</option>
+                <option value="fr">Francese</option>
+                <option value="de">Tedesco</option>
+                <option value="es">Spagnolo</option>
+            </select>
+            <button class="btn-primary" type="submit">Salva modifiche</button>
+        </form>
+    </div>
+</body>
+</html>
